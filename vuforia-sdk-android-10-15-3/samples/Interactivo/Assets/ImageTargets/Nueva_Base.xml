@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="Superficie_Luna" size="0.221000 0.165750" />
+    <ImageTarget name="Color_abs" size="0.155000 0.155000" />
+
+  </Tracking>
+</QCARConfig>
