@@ -192,6 +192,16 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_initRendering(JNIEnv* /* 
 }
 
 
+
+/*
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarVariable(JNIEnv *env, jobject thiz,
+                                                                      jfloat valor) {
+    // TODO: implement enviarVariable()
+}*/
+
+
 JNIEXPORT void JNICALL
 Java_com_vuforia_engine_native_1sample_VuforiaActivity_setTextures(JNIEnv* env, jobject /* this */, jint objeto1Width,
                                                                    jint objeto1Height, jobject objeto1ByteBuffer,
@@ -284,7 +294,16 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_00024Companion_getImageTa
     return AppController::IMAGE_TARGET_ID;
 }
 
+float aumento = 0.0f;
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarVariable(JNIEnv* /* env */, jobject /* this */,
+                                                                      jfloat valor)
+{
+    aumento+=valor;
+    gWrapperData.renderer.recibirIncremento(aumento);
+}
 
 
 
@@ -347,3 +366,4 @@ accessFusionProviderPointers()
 #ifdef __cplusplus
 }
 #endif
+

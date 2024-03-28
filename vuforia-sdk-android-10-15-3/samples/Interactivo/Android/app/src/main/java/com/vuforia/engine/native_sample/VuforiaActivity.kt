@@ -101,11 +101,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun configureRendering(width: Int, height: Int, orientation: Int, rotation: Int) : Boolean
     private external fun renderFrame() : Boolean
 
+    /// Cambio
+    private external fun enviarVariable(valor: Float)
+
     // Declarar un botón para interacción
     private lateinit var vuforiaButton: Button
     /*private lateinit var vuforiaButton1: Button*/
-
-    private var aumentoX = 0.0f
 
     // Activity methods
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,9 +213,8 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             // Acciones al hacer clic en el nuevo botón
             Toast.makeText(this, "¡Botón ROJO presionado!", Toast.LENGTH_SHORT).show()
             // Puedes agregar tu lógica de interacción Vuforia deseada aquí
+            enviarVariable(10.0f)
 
-            aumentoX += 1.0f
-//            GLESRenderer.setAumentoX(1.0f);
         }
 
         /*vuforiaButton1.setOnClickListener {

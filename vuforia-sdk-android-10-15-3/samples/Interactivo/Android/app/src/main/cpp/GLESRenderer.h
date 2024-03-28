@@ -46,6 +46,11 @@ public:
     /// Render a bounding box augmentation on an Image Target
     void renderImageTarget(VuMatrix44F& projectionMatrix, VuMatrix44F& modelViewMatrix, VuMatrix44F& scaledModelViewMatrix);
 
+    /// Valor de incremento.
+    void recibirIncremento(float valor);
+
+    float getVariable();
+
 private: // methods
     /// Attempt to create a texture from bytes
     /// If the value of textureId is not -1 it is assumed that it refers to an existing texture
@@ -90,6 +95,8 @@ private: // methods
 
     ///Triangulo
     void renderTriangulo(const VuMatrix44F &projectionMatrix, const VuMatrix44F &modelViewMatrix, float scale, const VuVector4F &color);
+
+
 
 private: // data members
     // For video background rendering

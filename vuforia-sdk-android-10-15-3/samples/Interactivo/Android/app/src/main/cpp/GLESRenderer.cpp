@@ -128,6 +128,9 @@ GLESRenderer::setObjeto2Texture(int width, int height, unsigned char* bytes)
     createTexture(width, height, bytes, mObjeto2TextureUnit);
 }
 
+///////////////////////////////////////////////
+
+
 void
 GLESRenderer::renderVideoBackground(const VuMatrix44F& projectionMatrix, const float* vertices, const float* textureCoordinates,
                                     const int numTriangles, const unsigned int* indices, int textureUnit)
@@ -473,6 +476,17 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 float aumentoX = 0.0f;
 
 void
+GLESRenderer::recibirIncremento(float valor)
+{
+    aumentoX = valor;
+}
+
+float
+GLESRenderer::getVariable() {
+    return aumentoX;
+}
+
+void
 GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVertices, const float* vertices,
                           const float* textureCoordinates, GLuint textureId)
 {
@@ -520,6 +534,8 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_BLEND);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+
+    LOG("Valor %f", aumentoX);
 }
 
 // Objeto 2
@@ -644,7 +660,6 @@ GLESRenderer::loadObjModel(const std::vector<char>& data, int& numVertices, std:
             int fv = shapes[s].mesh.num_face_vertices[f];
             numVertices += fv;
 
-            // Loop over vertices in the face.
             for (size_t v = 0; v < fv; ++v)
             {
                 // access to vertex
@@ -668,6 +683,7 @@ GLESRenderer::loadObjModel(const std::vector<char>& data, int& numVertices, std:
                     texCoords.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
                 }
             }
+            // Loop over vertices in the face.
             index_offset += fv;
         }
     }
