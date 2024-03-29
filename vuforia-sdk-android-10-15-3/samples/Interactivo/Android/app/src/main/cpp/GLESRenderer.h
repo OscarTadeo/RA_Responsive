@@ -47,9 +47,8 @@ public:
     void renderImageTarget(VuMatrix44F& projectionMatrix, VuMatrix44F& modelViewMatrix, VuMatrix44F& scaledModelViewMatrix);
 
     /// Valor de incremento.
-    void recibirIncremento(float valor);
+    void recibirIncrementoX(float valor);
 
-    float getVariable();
 
 private: // methods
     /// Attempt to create a texture from bytes

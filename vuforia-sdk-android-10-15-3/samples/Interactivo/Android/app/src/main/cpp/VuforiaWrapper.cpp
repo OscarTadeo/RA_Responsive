@@ -298,11 +298,11 @@ float aumento = 0.0f;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarVariable(JNIEnv* /* env */, jobject /* this */,
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarVariableX(JNIEnv* /* env */, jobject /* this */,
                                                                       jfloat valor)
 {
     aumento+=valor;
-    gWrapperData.renderer.recibirIncremento(aumento);
+    gWrapperData.renderer.recibirIncrementoX(aumento);
 }
 
 

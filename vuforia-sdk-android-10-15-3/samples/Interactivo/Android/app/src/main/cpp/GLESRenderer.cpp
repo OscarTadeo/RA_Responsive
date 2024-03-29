@@ -476,15 +476,11 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 float aumentoX = 0.0f;
 
 void
-GLESRenderer::recibirIncremento(float valor)
+GLESRenderer::recibirIncrementoX(float valor)
 {
     aumentoX = valor;
 }
 
-float
-GLESRenderer::getVariable() {
-    return aumentoX;
-}
 
 void
 GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVertices, const float* vertices,

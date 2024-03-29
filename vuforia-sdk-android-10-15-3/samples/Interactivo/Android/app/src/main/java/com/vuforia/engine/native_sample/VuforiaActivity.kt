@@ -44,12 +44,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.TextView
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Timer
 import java.util.TimerTask
-
+import android.util.TypedValue  // Add this import statement
 
 
 /**
@@ -101,8 +102,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun configureRendering(width: Int, height: Int, orientation: Int, rotation: Int) : Boolean
     private external fun renderFrame() : Boolean
 
-    /// Cambio
-    private external fun enviarVariable(valor: Float)
+    // Se envia el aumento dela variable X a la clase VuforiaWrapper.cpp
+    private external fun enviarVariableX(valor: Float)
+
+    // Declarar el texto.
+    lateinit var traslacionTextView: TextView
 
     // Declarar un botón para interacción
     private lateinit var vuforiaButton: Button
@@ -160,9 +164,16 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
-        // inicializar el botón
+        // Inicializar el texto
+        traslacionTextView = TextView(this)
+        traslacionTextView.text = "TRASLACIÓN"
+        traslacionTextView.setTextColor(Color.WHITE) // Ajustar el color según sea necesario
+        traslacionTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 35f) // Ajustar el tamaño de fuente según sea necesario
+        traslacionTextView.setBackgroundColor(Color.RED) // Hacer que el fondo sea transparente
+
+        // Inicializar el botón
         vuforiaButton = Button(this)
-        vuforiaButton.text = "Botón"
+        vuforiaButton.text = "X +"
         vuforiaButton.setTextColor(Color.RED)
         vuforiaButton.setBackgroundColor(Color.BLACK)
 
@@ -192,7 +203,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 vuforiaButton.setY(parentHeight / 2f - buttonHeight / 2f)*/
 
                 vuforiaButton.setX(parentWidth.toFloat() - buttonWidth.toFloat())
-                vuforiaButton.setY(0.0f)
+                vuforiaButton.setY(50.0f)
+
+//                traslacionTextView.x = vuforiaButton.x + vuforiaButton.width / 2 - traslacionTextView.width / 2
+                traslacionTextView.x = parentWidth.toFloat() - buttonWidth.toFloat()
+                traslacionTextView.y = (0.0f)
 
                 /*vuforiaButton1.setX(parentWidth.toFloat() - buttonWidth.toFloat())
                 vuforiaButton1.setY(vuforiaButton.y + vuforiaButton.height + 10.0f)*/
@@ -211,9 +226,9 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
         vuforiaButton.setOnClickListener {
             // Acciones al hacer clic en el nuevo botón
-            Toast.makeText(this, "¡Botón ROJO presionado!", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "¡Botón ROJO presionado!", Toast.LENGTH_SHORT).show()
             // Puedes agregar tu lógica de interacción Vuforia deseada aquí
-            enviarVariable(0.01f)
+            enviarVariableX(0.01f)
 
         }
 
@@ -234,6 +249,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             Toast.makeText(this, "¡Botón 1 presionado!", Toast.LENGTH_SHORT).show()
             // Puedes agregar tu lógica de interacción Vuforia deseada aquí
         }*/
+
+        // Agregar el texto
+        addContentView(traslacionTextView, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
 
         // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
         addContentView(vuforiaButton, ViewGroup.LayoutParams(
