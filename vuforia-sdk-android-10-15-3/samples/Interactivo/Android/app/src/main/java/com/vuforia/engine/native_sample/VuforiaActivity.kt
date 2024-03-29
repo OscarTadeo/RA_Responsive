@@ -213,7 +213,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             // Acciones al hacer clic en el nuevo botón
             Toast.makeText(this, "¡Botón ROJO presionado!", Toast.LENGTH_SHORT).show()
             // Puedes agregar tu lógica de interacción Vuforia deseada aquí
-            enviarVariable(10.0f)
+            enviarVariable(0.01f)
 
         }
 

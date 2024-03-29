@@ -510,7 +510,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     //------------------------------------//
-    VuVector3F vectTrasformacion{-0.1 ,0,0};
+    VuVector3F vectTrasformacion{aumentoX-0.1f ,0,0};
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
     VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, matTraslacion);
     //____________________________________//
