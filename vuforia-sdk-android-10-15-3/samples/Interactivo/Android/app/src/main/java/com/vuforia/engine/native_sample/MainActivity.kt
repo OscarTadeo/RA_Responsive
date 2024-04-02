@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        // Encuentra el botón en el layout
+       /* // Encuentra el botón en el layout
         val btnCamera = findViewById<Button>(R.id.btnCamera)
         btnCamera.setOnClickListener {
             // Aquí se ejecuta el código cuando se hace clic en el botón
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             // Por ejemplo, mostrar un mensaje o iniciar la cámara
             Toast.makeText(applicationContext, "Botón de cámara presionado", Toast.LENGTH_SHORT).show()
             // Lógica adicional para activar/desactivar la cámara AR
-        }
+        }*/
     }
 
 

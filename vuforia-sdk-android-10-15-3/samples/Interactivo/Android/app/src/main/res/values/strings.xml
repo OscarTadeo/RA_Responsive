@@ -12,6 +12,8 @@
 
     <string name="Texto">Boton de prueba</string>
 
+    <string name="Instruccion">Toque la imagen</string>
+
     <string name="ok">OK</string>
     <string name="error_dialog_title">Vuforia error</string>
 </resources>

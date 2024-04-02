@@ -104,7 +104,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun renderFrame() : Boolean
 
     // Se envia el aumento dela variable X a la clase VuforiaWrapper.cpp
-    private external fun enviarVariableX(valor: Float)
+    private external fun enviarCoordX(valor: Float)
 
     // Declarar el texto.
     lateinit var traslacionTextView: TextView
@@ -179,6 +179,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton.setTextColor(Color.RED)
         vuforiaButton.setBackgroundColor(Color.WHITE)
 
+        // Redondeo de esquinas del botón
         vuforiaButton.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
                 outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
@@ -263,15 +264,53 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         })
 
-        vuforiaButton.setOnClickListener {
+        /*vuforiaButton.setOnClickListener {
             // Acciones al hacer clic en el nuevo botón
             // Toast.makeText(this, "¡Botón ROJO presionado!", Toast.LENGTH_SHORT).show()
 
             // Puedes agregar tu lógica de interacción Vuforia deseada aquí
-            enviarVariableX(0.01f)
 
+
+            *//*colorVuforiaButton = if (colorVuforiaButton == Color.WHITE)
+                Color.BLACK else
+                    Color.WHITE
+
+            vuforiaButton.setBackgroundColor(colorVuforiaButton)*//*
+            _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Change button color to blue on press
+
+                    vuforiaButton.setBackgroundColor(Color.BLACK)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Change button color back to red on release or cancel
+                    vuforiaButton.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+            enviarCoordX(0.01f)
+        }*/
+
+        vuforiaButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Change button color to blue on press
+                    vuforiaButton.setBackgroundColor(Color.GRAY)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Change button color back to red on release or cancel
+                    vuforiaButton.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
         }
 
+        enviarCoordX(0.01f)
 
 
         /*vuforiaButton1.setOnClickListener {
@@ -347,6 +386,9 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         if (runtimePermissionsGranted()) {
             if (!mPermissionsRequested && mVuforiaStarted) {
                 GlobalScope.launch(Dispatchers.Unconfined) {
+
+                    // Se reinicia AR despues de minimizar
+                    startAR()
                     initializeVuforia()
                 }
             }
