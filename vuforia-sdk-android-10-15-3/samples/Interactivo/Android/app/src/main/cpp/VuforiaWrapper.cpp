@@ -294,15 +294,15 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_00024Companion_getImageTa
     return AppController::IMAGE_TARGET_ID;
 }
 
-float aumento = 0.0f;
+float incremento = 0.0f;
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarCoordX(JNIEnv* /* env */, jobject /* this */,
                                                                       jfloat valor)
 {
-    aumento+=valor;
-    gWrapperData.renderer.recibirIncrementoX(aumento);
+    incremento+=valor;
+    gWrapperData.renderer.recibirIncrementoX(incremento);
 }
 
 

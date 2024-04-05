@@ -294,11 +294,13 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             enviarCoordX(0.01f)
         }*/
 
+
         vuforiaButton.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // Change button color to blue on press
                     vuforiaButton.setBackgroundColor(Color.GRAY)
+                    enviarCoordX(0.01f)
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
@@ -310,7 +312,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
-        enviarCoordX(0.01f)
+
 
 
         /*vuforiaButton1.setOnClickListener {

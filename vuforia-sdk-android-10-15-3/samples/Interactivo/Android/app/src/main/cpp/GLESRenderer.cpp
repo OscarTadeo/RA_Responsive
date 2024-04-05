@@ -291,8 +291,8 @@ GLESRenderer::renderCube(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 
 // Triangulo
 // Metodo para renderizar el Triangulo.
-float incrementoX = 0.03f;
-float incrementoY = 0.0f;
+float aumentoX = 0.03f;
+float aumentoY = 0.0f;
 float y = 0.0f;
 float x = 0.0f;
 
@@ -324,18 +324,18 @@ GLESRenderer::renderTriangulo(const VuMatrix44F& projectionMatrix, const VuMatri
 
     ////////// IMPORTANTE: La inicilaización de los incrementos es imporatente a tomar en cuenta
 
-    x += incrementoX;
-    y += incrementoY;
+    x += aumentoX;
+    y += aumentoY;
 
     ///////////////////////////// Movimiento <-/->
     /*if (x > 5.0f)
     {
-        incrementoX = -0.03f;
+        aumentoX = -0.03f;
     }
 
     if (x < -5.0f)
     {
-        incrementoX = 0.03f;
+        aumentoX = 0.03f;
     }
 
     VuVector3F vectTrasformacion{x ,0,0};*/
@@ -343,8 +343,8 @@ GLESRenderer::renderTriangulo(const VuMatrix44F& projectionMatrix, const VuMatri
     ////////////////////////////// Movimiento en L
     /*if (x >= 5.0f)
     {
-        incrementoX = 0.0f;
-        incrementoY = 0.03f;
+        aumentoX = 0.0f;
+        aumentoY = 0.03f;
     }
 
     if (y >= 5.0f)
@@ -355,8 +355,8 @@ GLESRenderer::renderTriangulo(const VuMatrix44F& projectionMatrix, const VuMatri
 
     if (x <= 0)
     {
-        incrementoX = 0.03f;
-        incrementoY = 0.0f;
+        aumentoX = 0.03f;
+        aumentoY = 0.0f;
     }
     VuVector3F vectTrasformacion{x ,y,0};*/
 
@@ -364,20 +364,20 @@ GLESRenderer::renderTriangulo(const VuMatrix44F& projectionMatrix, const VuMatri
 
     if (x >= 10.0f)
     {
-        incrementoX = 0.0f;
-        incrementoY = 0.03f;
+        aumentoX = 0.0f;
+        aumentoY = 0.03f;
     }
 
     if (x >= 10.0f && y >= 10.0f)
     {
-        incrementoX = -0.03f;
-        incrementoY = 0.0f;
+        aumentoX = -0.03f;
+        aumentoY = 0.0f;
     }
 
     if (x <= 0)
     {
-        incrementoX = 0.03f;
-        incrementoY = 0.0f;
+        aumentoX = 0.03f;
+        aumentoY = 0.0f;
     }
 
     if (x <= 0.0f && y >= 10.0f)
@@ -473,12 +473,12 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 }
 
 
-float aumentoX = 0.0f;
+float incrementoX = 0.0f;
 
 void
 GLESRenderer::recibirIncrementoX(float valor)
 {
-    aumentoX = valor;
+    incrementoX = valor;
 }
 
 
@@ -506,7 +506,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     //------------------------------------//
-    VuVector3F vectTrasformacion{aumentoX-0.1f ,0,0};
+    VuVector3F vectTrasformacion{incrementoX-0.1f ,0,0};
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
     VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, matTraslacion);
     //____________________________________//
@@ -531,7 +531,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
 
-    LOG("Valor %f", aumentoX);
+    LOG("Valor %f", incrementoX);
 }
 
 // Objeto 2
@@ -612,11 +612,6 @@ GLESRenderer::readAsset(AAssetManager* assetManager, const char* filename, std::
     return true;
 }
 
-void
-GLESRenderer::setAumentoX(float value)
-{
-    aumentoX = value;
-}
 
 bool
 GLESRenderer::loadObjModel(const std::vector<char>& data, int& numVertices, std::vector<float>& vertices, std::vector<float>& texCoords)
