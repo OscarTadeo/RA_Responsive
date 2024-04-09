@@ -473,12 +473,12 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 }
 
 
-float incrementoX = 0.0f;
+float coorX = 0.0f;
 
 void
 GLESRenderer::recibirIncrementoX(float valor)
 {
-    incrementoX = valor;
+    coorX = valor;
 }
 
 
@@ -506,7 +506,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     //------------------------------------//
-    VuVector3F vectTrasformacion{incrementoX-0.1f ,0,0};
+    VuVector3F vectTrasformacion{coorX-0.1f ,0,0};
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
     VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, matTraslacion);
     //____________________________________//
@@ -531,7 +531,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
 
-    LOG("Valor %f", incrementoX);
+    LOG("Valor %f", coorX);
 }
 
 // Objeto 2

@@ -8,6 +8,7 @@ countries.
 package com.vuforia.engine.native_sample
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
@@ -115,6 +116,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     /*private lateinit var vuforiaButton1: Button*/
 
     // Activity methods
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

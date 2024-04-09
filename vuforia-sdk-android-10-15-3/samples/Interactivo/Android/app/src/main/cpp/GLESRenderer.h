@@ -50,7 +50,7 @@ public:
     void recibirIncrementoX(float valor);
 
     /// Valor de incremneto en coordenada Y.
-    void recibirIncrementoY(float valor);
+    void recibirCoordY(float valor);
 
 private: // methods
     /// Attempt to create a texture from bytes
