@@ -105,15 +105,24 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun renderFrame() : Boolean
 
     // Se envia el aumento dela variable X a la clase VuforiaWrapper.cpp
-    private external fun enviarCoordX(valor: Float)
+    private external fun incremCoordX(valor: Float)
+    private external fun decremCoordX(valor: Float)
+    private external fun incremRotX(valor: Float)
 
     // Declarar el texto.
     lateinit var traslacionTextView: TextView
     lateinit var rotacionTextView: TextView
 
-    // Declarar un botón para interacción
+    // Declaración de botones de botones para interacción
+
+    // X +
     private lateinit var vuforiaButton: Button
-    /*private lateinit var vuforiaButton1: Button*/
+
+    // X -
+    private lateinit var vuforiaButton1: Button
+
+    // rot X +
+    private lateinit var vuforiaButton2: Button
 
     // Activity methods
     @SuppressLint("ClickableViewAccessibility")
@@ -175,7 +184,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         traslacionTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f) // Ajustar el tamaño de fuente según sea necesario
         traslacionTextView.setBackgroundColor(Color.argb(50,255,255,255)) // Hacer que el fondo sea transparente
 
-        // Inicializar el botón
+        // Inicializar los botones de traslación
         vuforiaButton = Button(this)
         vuforiaButton.text = "X +"
         vuforiaButton.setTextColor(Color.RED)
@@ -187,8 +196,20 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
             }
         }
-
         vuforiaButton.clipToOutline = true
+
+        vuforiaButton1 = Button(this)
+        vuforiaButton1.text = "X -"
+        vuforiaButton1.setTextColor(Color.RED)
+        vuforiaButton1.setBackgroundColor(Color.WHITE)
+
+        // Redondeo de esquinas del botón
+        vuforiaButton1.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton1.clipToOutline = true
 
 
         // Inicializar el texto para al rotacion
@@ -198,6 +219,19 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         rotacionTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f) // Ajustar el tamaño de fuente según sea necesario
         rotacionTextView.setBackgroundColor(Color.argb(50,255,255,255)) // Hacer que el fondo sea transparente
 
+        // Inicializar los botones de rotación
+        vuforiaButton2 = Button(this)
+        vuforiaButton2.text = "X +"
+        vuforiaButton2.setTextColor(Color.RED)
+        vuforiaButton2.setBackgroundColor(Color.WHITE)
+
+        // Redondeo de esquinas del botón
+        vuforiaButton2.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton2.clipToOutline = true
 
         /*vuforiaButton1 = Button(this)
         vuforiaButton1.text = "Botón_1"
@@ -205,29 +239,39 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton1.setBackgroundColor(Color.BLACK)*/
 
         // Ocultar el boton
+//        traslacionTextView.visibility = View.GONE
         vuforiaButton.visibility = View.GONE
+        vuforiaButton1.visibility = View.GONE
+        vuforiaButton2.visibility = View.GONE
         rotacionTextView.visibility = View.GONE
-        // vuforiaButton1.visibility = View.GONE
 
         // Obtener el ancho y alto de la vista principal (considera usar ViewTreeObserver)
-        val viewTreeObserver = rotacionTextView.viewTreeObserver
+        val viewTreeObserver = traslacionTextView.viewTreeObserver
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                val parentWidth = (rotacionTextView.parent as ViewGroup).measuredWidth
-                val parentHeight = (rotacionTextView.parent as ViewGroup).measuredHeight
+                val parentWidth = (traslacionTextView.parent as ViewGroup).measuredWidth
+                val parentHeight = (traslacionTextView.parent as ViewGroup).measuredHeight
 
                 /*val buttonWidth = vuforiaButton.width
                 val buttonHeight = vuforiaButton.height*/
 
+                // Coordenadas para posicionar el texto "TRASLACIÓN" en la parte superior izquierda
                 traslacionTextView.x = 50.0f
                 traslacionTextView.y = (0.0f)
 
                 vuforiaButton.setX(traslacionTextView.x)
                 vuforiaButton.setY(traslacionTextView.y + 100.0f)
 
+                vuforiaButton1.setX(traslacionTextView.x)
+                vuforiaButton1.setY(traslacionTextView.y + 250.0f)
+
+
                 // Coordenadas para posicionar el texto "ROTACION" en la parte superior derecha
-                rotacionTextView.x = parentWidth.toFloat() - rotacionTextView.width - 50.0f
+                rotacionTextView.x = parentWidth.toFloat() - traslacionTextView.width - 50.0f
                 rotacionTextView.y = 0.0f
+
+                vuforiaButton2.setX(rotacionTextView.x + 50.0f)
+                vuforiaButton2.setY(100.0f)
 
 
                 // Posiciona el botón en el centro de la pantalla
@@ -302,12 +346,46 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 MotionEvent.ACTION_DOWN -> {
                     // Change button color to blue on press
                     vuforiaButton.setBackgroundColor(Color.GRAY)
-                    enviarCoordX(0.01f)
+                    incremCoordX(0.01f)
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     // Change button color back to red on release or cancel
                     vuforiaButton.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
+        vuforiaButton1.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Change button color to blue on press
+                    vuforiaButton1.setBackgroundColor(Color.GRAY)
+                    decremCoordX(0.01f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Change button color back to red on release or cancel
+                    vuforiaButton1.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
+        vuforiaButton2.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Change button color to blue on press
+                    vuforiaButton2.setBackgroundColor(Color.GRAY)
+                    incremRotX(1.0f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Change button color back to red on release or cancel
+                    vuforiaButton2.setBackgroundColor(Color.WHITE)
                     true
                 }
                 else -> false
@@ -347,8 +425,20 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
 
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton1, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
         // Agregar el texto rotacion
         addContentView(rotacionTextView, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton2, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
@@ -555,6 +645,8 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
             // Mostrar el botón después de la carga de Vuforia
             vuforiaButton.visibility = View.VISIBLE
+            vuforiaButton1.visibility = View.VISIBLE
+            vuforiaButton2.visibility = View.VISIBLE
             rotacionTextView.visibility = View.VISIBLE
         }
 

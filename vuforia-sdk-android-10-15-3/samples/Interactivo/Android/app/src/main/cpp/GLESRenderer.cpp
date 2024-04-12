@@ -473,12 +473,18 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 }
 
 
-float coorX = 0.0f;
+float coord = 0.0f;
+float rot = 0.0f;
 
 void
-GLESRenderer::recibirIncrementoX(float valor)
+GLESRenderer::recibirCoordX(float valor)
 {
-    coorX = valor;
+    coord = valor;
+}
+
+void
+GLESRenderer::recibirRotX(float valor) {
+    rot = valor;
 }
 
 
@@ -506,9 +512,14 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     //------------------------------------//
-    VuVector3F vectTrasformacion{coorX-0.1f ,0,0};
+    VuVector3F vectTrasformacion{coord-0.1f ,0,0};
+    VuVector3F vectRotacion{1,0,0};
+
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
-    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, matTraslacion);
+    VuMatrix44F matRotacion = vuMatrix44FRotationMatrix(rot,vectRotacion);
+    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion,matRotacion);
+
+    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
     //____________________________________//
 
     glUniformMatrix4fv(mTextureUniformColorMvpMatrixHandle, 1, GL_FALSE, (GLfloat*)matFinal.data);
@@ -531,7 +542,8 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
 
-    LOG("Valor %f", coorX);
+//    LOG("Valor %f", coord);
+    LOG("Valor R %f", rot);
 }
 
 // Objeto 2

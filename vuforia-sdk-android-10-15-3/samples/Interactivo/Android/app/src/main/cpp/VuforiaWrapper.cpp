@@ -294,16 +294,50 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_00024Companion_getImageTa
     return AppController::IMAGE_TARGET_ID;
 }
 
-float incremento = 0.0f;
+float coordX = 0.0f;
+float rotX = 0.0f;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_vuforia_engine_native_1sample_VuforiaActivity_enviarCoordX(JNIEnv* /* env */, jobject /* this */,
+enviarValor(jfloat valor)
+{
+    gWrapperData.renderer.recibirCoordX(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorRot(jfloat valor)
+{
+    gWrapperData.renderer.recibirRotX(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremCoordX(JNIEnv* /* env */, jobject /* this */,
                                                                       jfloat valor)
 {
-    incremento+=valor;
-    gWrapperData.renderer.recibirIncrementoX(incremento);
+    coordX+=valor;
+    enviarValor(coordX);
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremCoordX(JNIEnv* /* env */, jobject /* this */,
+                                                                      jfloat valor)
+{
+    coordX-=valor;
+    enviarValor(coordX);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremRotX(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    rotX+=valor;
+    enviarValorRot(rotX);
+}
+
 
 
 
