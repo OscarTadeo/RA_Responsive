@@ -295,13 +295,22 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_00024Companion_getImageTa
 }
 
 float coordX = 0.0f;
+float coordY = 0.0f;
+
 float rotX = 0.0f;
 
 extern "C"
 JNIEXPORT void JNICALL
-enviarValor(jfloat valor)
+enviarValorX(jfloat valor)
 {
     gWrapperData.renderer.recibirCoordX(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorY(jfloat valor)
+{
+    gWrapperData.renderer.recibirCoordY(valor);
 }
 
 extern "C"
@@ -317,7 +326,7 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremCoordX(JNIEnv* /* e
                                                                       jfloat valor)
 {
     coordX+=valor;
-    enviarValor(coordX);
+    enviarValorX(coordX);
 }
 
 extern "C"
@@ -326,7 +335,16 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremCoordX(JNIEnv* /* e
                                                                       jfloat valor)
 {
     coordX-=valor;
-    enviarValor(coordX);
+    enviarValorX(coordX);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremCoordY(JNIEnv* /* env */, jobject /* this */,
+                                                                      jfloat valor)
+{
+    coordY+=valor;
+    enviarValorY(coordY);
 }
 
 extern "C"
