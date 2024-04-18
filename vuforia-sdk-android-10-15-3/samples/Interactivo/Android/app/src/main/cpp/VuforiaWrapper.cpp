@@ -349,6 +349,15 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremCoordY(JNIEnv* /* e
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremCoordY(JNIEnv* /* env */, jobject /* this */,
+                                                                      jfloat valor)
+{
+    coordY-=valor;
+    enviarValorY(coordY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremRotX(JNIEnv* /* env */, jobject /* this */,
                                                                     jfloat valor)
 {

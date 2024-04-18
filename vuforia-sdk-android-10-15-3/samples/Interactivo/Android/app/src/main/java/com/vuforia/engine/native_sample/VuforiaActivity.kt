@@ -53,6 +53,7 @@ import kotlinx.coroutines.withContext
 import java.util.Timer
 import java.util.TimerTask
 import android.util.TypedValue  // Add this import statement
+import android.os.Handler
 
 
 /**
@@ -109,12 +110,14 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun decremCoordX(valor: Float)
 
     private external fun incremCoordY(valor: Float)
+    private external fun decremCoordY(valor: Float)
 
     private external fun incremRotX(valor: Float)
 
     // Declarar el texto.
     lateinit var traslacionTextView: TextView
     lateinit var rotacionTextView: TextView
+    lateinit var escalaTextView: TextView
 
     // Declaración de botones de botones para interacción
 
@@ -246,6 +249,19 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         }
         vuforiaButton2.clipToOutline = true
 
+        vuforiaButton3 = Button(this)
+        vuforiaButton3.text = "Y -"
+        vuforiaButton3.setTextColor(Color.GREEN)
+        vuforiaButton3.setBackgroundColor(Color.WHITE)
+
+        // Redondeo de esquinas del botón
+        vuforiaButton3.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton3.clipToOutline = true
+
 
         // Inicializar el texto para al rotacion
         rotacionTextView = TextView(this)
@@ -268,18 +284,31 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         }
         vuforiaButton6.clipToOutline = true
 
-        /*vuforiaButton1 = Button(this)
-        vuforiaButton1.text = "Botón_1"
-        vuforiaButton1.setTextColor(Color.GREEN)
-        vuforiaButton1.setBackgroundColor(Color.BLACK)*/
+        // Inicializar el texto para la Escala
+        escalaTextView = TextView(this)
+        escalaTextView.text = "ESCALA"
+        escalaTextView.setTextColor(Color.WHITE) // Ajustar el color según sea necesario
+        escalaTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f) // Ajustar el tamaño de fuente según sea necesario
+        escalaTextView.setBackgroundColor(Color.argb(50,255,255,255)) // Hacer que el fondo sea transparente
+
+        escalaTextView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        escalaTextView.clipToOutline = true
 
         // Ocultar el boton
 //        traslacionTextView.visibility = View.GONE
         vuforiaButton.visibility = View.GONE
         vuforiaButton1.visibility = View.GONE
         vuforiaButton2.visibility = View.GONE
+        vuforiaButton3.visibility = View.GONE
         vuforiaButton6.visibility = View.GONE
         rotacionTextView.visibility = View.GONE
+        escalaTextView.visibility = View.GONE
+
+
 
         // Obtener el ancho y alto de la vista principal (considera usar ViewTreeObserver)
         val viewTreeObserver = traslacionTextView.viewTreeObserver
@@ -304,6 +333,9 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 vuforiaButton2.setX(traslacionTextView.x)
                 vuforiaButton2.setY(vuforiaButton1.y + 185.0f)
 
+                vuforiaButton3.setX(traslacionTextView.x)
+                vuforiaButton3.setY(vuforiaButton2.y + 150.0f)
+
 
                 // Coordenadas para posicionar el texto "ROTACION" en la parte superior derecha
                 rotacionTextView.x = parentWidth.toFloat() - traslacionTextView.width
@@ -311,6 +343,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
                 vuforiaButton6.setX(rotacionTextView.x)
                 vuforiaButton6.setY(100.0f)
+
+                // Coordenadas para posicionar el texto "ESCALA" en la inferior
+
+                escalaTextView.x = parentWidth / 2f - escalaTextView.width / 2f
+                escalaTextView.y = parentHeight.toFloat() - escalaTextView.height
 
 
                 // Posiciona el botón en el centro de la pantalla
@@ -379,23 +416,82 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             enviarCoordX(0.01f)
         }*/
 
+        /*var buttonPressed = false
 
         vuforiaButton.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // Change button color to blue on press
                     vuforiaButton.setBackgroundColor(Color.GRAY)
-                    incremCoordX(0.01f)
+//                    incremCoordX(0.01f)
+                    buttonPressed = true
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     // Change button color back to red on release or cancel
                     vuforiaButton.setBackgroundColor(Color.WHITE)
+                    buttonPressed = false
                     true
                 }
                 else -> false
             }
         }
+
+        val timer = Timer()
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                if (buttonPressed) {
+                    incremCoordX(0.01f)
+                }
+            }
+        }, 100, 100)
+*/
+
+        var buttonPressed = false  // Flag to track button press state
+        var count = 0  // Variable to increment
+        var lastIncrementTime = 0L  // Time of the last count increment
+        var buttonDownStartTime = 0L  // Time when the button was first pressed
+        var isIncrementing = false;  // Flag to track incrementing state (moved outside TimerTask)
+
+        vuforiaButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    buttonPressed = true
+                    buttonDownStartTime = System.currentTimeMillis()  // Start counting for 2 seconds
+                    vuforiaButton.setBackgroundColor(Color.GRAY)  // Change color on press
+                    incremCoordX(0.01f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    buttonPressed = false
+                    vuforiaButton.setBackgroundColor(Color.WHITE)  // Revert color on release
+                    true
+                }
+                else -> false
+            }
+        }
+
+        // **Timer for managing button press and incrementing count:**
+        val timer = Timer()
+        val timerTask = object : TimerTask() {
+            override fun run() {
+                if (buttonPressed) {
+                    val currentTime = System.currentTimeMillis()
+
+                    // Check if 2 seconds have passed since the button was first pressed
+                    if (currentTime - buttonDownStartTime >= 1000) {
+                        // Start incrementing every 1 second
+                        isIncrementing = true;
+                        lastIncrementTime = currentTime
+                        incremCoordX(0.01f)
+                        Log.d("VuforiaActivity_", "Count 1: $count")
+                    }
+                }
+            }
+        }
+
+        // Start the timer task to run every 100 milliseconds
+        timer.scheduleAtFixedRate(timerTask, 0, 100)
 
         vuforiaButton1.setOnTouchListener { _, event ->
             when (event.action) {
@@ -431,6 +527,23 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
+        vuforiaButton3.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Change button color to blue on press
+                    vuforiaButton3.setBackgroundColor(Color.GRAY)
+                    decremCoordY(0.01f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Change button color back to red on release or cancel
+                    vuforiaButton3.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
         vuforiaButton6.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -447,6 +560,8 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 else -> false
             }
         }
+
+
 
 
 
@@ -493,6 +608,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
 
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton3, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
         // Agregar el texto rotacion
         addContentView(rotacionTextView, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -505,11 +626,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
 
-        /*// Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
-        addContentView(vuforiaButton1, ViewGroup.LayoutParams(
+        // Agregar el texto escala
+        addContentView(escalaTextView, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
-        ))*/
+        ))
 
         mGestureDetector = GestureDetectorCompat(this, GestureListener())
 
@@ -610,7 +731,6 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     }
 
 
-
     /// Custom GestureListener to capture single and double tap
     inner class GestureListener : SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
@@ -709,8 +829,10 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             vuforiaButton.visibility = View.VISIBLE
             vuforiaButton1.visibility = View.VISIBLE
             vuforiaButton2.visibility = View.VISIBLE
+            vuforiaButton3.visibility = View.VISIBLE
             vuforiaButton6.visibility = View.VISIBLE
             rotacionTextView.visibility = View.VISIBLE
+            escalaTextView.visibility = View.VISIBLE
         }
 
     }
