@@ -55,6 +55,9 @@ public:
     /// Valor de incremento o decremento en coordenada Y.
     void recibirCoordY(float valor);
 
+    /// Valor de rotación en coordenada Y.
+    void recibirRotY(float valor);
+
     /// Valor de incremento o decremento en coordenada Z.
     void recibirCoordZ(float valor);
 

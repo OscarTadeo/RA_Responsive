@@ -478,7 +478,8 @@ float coord_X = 0.0f;
 float coord_Y = 0.0f;
 float coord_Z = 0.0f;
 
-float rot = 0.0f;
+float rot_x = 0.0f;
+float rot_y = 0.0f;
 
 void
 GLESRenderer::recibirCoordX(float valor)
@@ -502,7 +503,12 @@ GLESRenderer::recibirCoordZ(float valor)
 
 void
 GLESRenderer::recibirRotX(float valor) {
-    rot = valor;
+    rot_x = valor;
+}
+
+void
+GLESRenderer::recibirRotY(float valor) {
+    rot_y = valor;
 }
 
 
@@ -531,12 +537,20 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
 
     //------------------------------------//
     VuVector3F vectTrasformacion{coord_X-0.1f ,coord_Y,coord_Z};
-    VuVector3F vectRotacion{1,0,0};
-
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
-    VuMatrix44F matRotacion = vuMatrix44FRotationMatrix(rot,vectRotacion);
-    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion,matRotacion);
 
+    /*VuVector3F vectRotacion{1,0,0};
+    VuMatrix44F matRotacion = vuMatrix44FRotationMatrix(rot_x,vectRotacion);*/
+
+    VuVector3F vectRotacionX{1,0,0};
+    VuMatrix44F matRotacionX = vuMatrix44FRotationMatrix(rot_x,vectRotacionX);
+
+    VuVector3F vectRotacionY{0,1,0};
+    VuMatrix44F matRotacionY = vuMatrix44FRotationMatrix(rot_y,vectRotacionY);
+
+    VuMatrix44F matRotacion = vuMatrix44FMultiplyMatrix(matRotacionX,matRotacionY);
+
+    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion,matRotacion);
     VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
     //____________________________________//
 
@@ -561,7 +575,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_DEPTH_TEST);
 
 //    LOG("Valor %f", coord);
-    LOG("Valor R %f", rot);
+    LOG("Valor R %f", rot_y);
 }
 
 // Objeto 2
