@@ -294,8 +294,11 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_00024Companion_getImageTa
     return AppController::IMAGE_TARGET_ID;
 }
 
+
+// Variables que contienen los valores a ser enviados a la clase GLESRender.cpp
 float coordX = 0.0f;
 float coordY = 0.0f;
+float coordZ = 0.0f;
 
 float rotX = 0.0f;
 
@@ -311,6 +314,13 @@ JNIEXPORT void JNICALL
 enviarValorY(jfloat valor)
 {
     gWrapperData.renderer.recibirCoordY(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorZ(jfloat valor)
+{
+    gWrapperData.renderer.recibirCoordZ(valor);
 }
 
 extern "C"
@@ -354,6 +364,15 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremCoordY(JNIEnv* /* e
 {
     coordY-=valor;
     enviarValorY(coordY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremCoordZ(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    coordZ+=valor;
+    enviarValorZ(coordZ);
 }
 
 extern "C"

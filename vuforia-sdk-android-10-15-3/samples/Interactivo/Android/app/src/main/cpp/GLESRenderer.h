@@ -46,14 +46,17 @@ public:
     /// Render a bounding box augmentation on an Image Target
     void renderImageTarget(VuMatrix44F& projectionMatrix, VuMatrix44F& modelViewMatrix, VuMatrix44F& scaledModelViewMatrix);
 
-    /// Valor de incremento en coordenada X.
+    /// Valor de incremento o decremento en coordenada X.
     void recibirCoordX(float valor);
 
     /// Valor de rotación en coordenada X.
     void recibirRotX(float valor);
 
-    /// Valor de incremneto en coordenada Y.
+    /// Valor de incremento o decremento en coordenada Y.
     void recibirCoordY(float valor);
+
+    /// Valor de incremento o decremento en coordenada Z.
+    void recibirCoordZ(float valor);
 
 private: // methods
     /// Attempt to create a texture from bytes

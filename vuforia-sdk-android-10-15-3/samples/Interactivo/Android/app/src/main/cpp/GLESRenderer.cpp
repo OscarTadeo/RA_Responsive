@@ -476,6 +476,7 @@ GLESRenderer::renderAxis(const VuMatrix44F& projectionMatrix, const VuMatrix44F&
 
 float coord_X = 0.0f;
 float coord_Y = 0.0f;
+float coord_Z = 0.0f;
 
 float rot = 0.0f;
 
@@ -490,6 +491,14 @@ GLESRenderer::recibirCoordY(float valor)
 {
     coord_Y = valor;
 }
+
+void
+GLESRenderer::recibirCoordZ(float valor)
+{
+    coord_Z = valor;
+}
+
+
 
 void
 GLESRenderer::recibirRotX(float valor) {
@@ -521,7 +530,7 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     //------------------------------------//
-    VuVector3F vectTrasformacion{coord_X-0.1f ,coord_Y,0};
+    VuVector3F vectTrasformacion{coord_X-0.1f ,coord_Y,coord_Z};
     VuVector3F vectRotacion{1,0,0};
 
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
