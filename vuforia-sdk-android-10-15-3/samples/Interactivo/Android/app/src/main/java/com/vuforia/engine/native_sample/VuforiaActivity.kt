@@ -573,9 +573,31 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton6.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    vuforiaButton6Pressed = true
+                    // Empieza a contar la cuenta de los segundos
+                    vuforiaButton6DownStartTime = System.currentTimeMillis()
+
                     // Cambio de color a gris al ser presionado
                     vuforiaButton6.setBackgroundColor(Color.GRAY)
                     incremRotX(10.0f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    vuforiaButton6Pressed = false
+                    // Cambia color a dejar de estar presioando
+                    vuforiaButton6.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
+        /*vuforiaButton6.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Cambio de color a gris al ser presionado
+                    vuforiaButton6.setBackgroundColor(Color.GRAY)
+
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
@@ -585,7 +607,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 }
                 else -> false
             }
-        }
+        }*/
 
         // Temporizador para gestionar el estado de los botones e incrementar el conteo
         val timer = Timer()
@@ -637,16 +659,6 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                     // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
                     if (currentTime - vuforiaButton4DownStartTime >= 500) {
                         // Comienza el incremento cada medio segundo
-                        incremCoordY(0.01f)
-                    }
-                }
-
-                if (vuforiaButton5Pressed) {
-                    val currentTime = System.currentTimeMillis()
-
-                    // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
-                    if (currentTime - vuforiaButton5DownStartTime >= 500) {
-                        // Comienza el incremento cada medio segundo
                         incremCoordZ(0.01f)
                     }
                 }
@@ -658,6 +670,16 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                     if (currentTime - vuforiaButton5DownStartTime >= 500) {
                         // Comienza el incremento cada medio segundo
                         decremCoordZ(0.01f)
+                    }
+                }
+
+                if (vuforiaButton6Pressed) {
+                    val currentTime = System.currentTimeMillis()
+
+                    // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
+                    if (currentTime - vuforiaButton6DownStartTime >= 500) {
+                        // Comienza el incremento cada medio segundo
+                        incremRotX(10.0f)
                     }
                 }
 
