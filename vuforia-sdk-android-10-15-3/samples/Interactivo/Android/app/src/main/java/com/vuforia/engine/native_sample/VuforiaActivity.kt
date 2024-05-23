@@ -183,6 +183,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     var vuforiaButton9Pressed = false  // Estado para saber si el estado del botón
     var vuforiaButton9DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
 
+    // rot Z +
+    private lateinit var vuforiaButton10: Button
+    var vuforiaButton10Pressed = false  // Estado para saber si el estado del botón
+    var vuforiaButton10DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
+
     // Activity methods
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -390,6 +395,19 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         }
         vuforiaButton9.clipToOutline = true
 
+        vuforiaButton10 = Button(this)
+        vuforiaButton10.text = "Z +"
+        vuforiaButton10.setTextColor(Color.GREEN)
+        vuforiaButton10.setBackgroundColor(Color.WHITE)
+
+        // Redondeo de esquinas del botón
+        vuforiaButton10.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton10.clipToOutline = true
+
         // Inicializar el texto para la Escala
         escalaTextView = TextView(this)
         escalaTextView.text = "ESCALA"
@@ -418,6 +436,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton7.visibility = View.GONE
         vuforiaButton8.visibility = View.GONE
         vuforiaButton9.visibility = View.GONE
+        vuforiaButton10.visibility = View.GONE
 
         escalaTextView.visibility = View.GONE
 
@@ -471,6 +490,9 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
                 vuforiaButton9.setX(rotacionTextView.x)
                 vuforiaButton9.setY(vuforiaButton8.y + 150.0f)
+
+                vuforiaButton10.setX(rotacionTextView.x)
+                vuforiaButton10.setY(vuforiaButton9.y + 185.0f)
 
                 // Coordenadas para posicionar el texto "ESCALA" en la inferior
 
@@ -735,6 +757,28 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
+        vuforiaButton10.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    vuforiaButton10Pressed = true
+                    // Empieza a contar la cuenta de los segundos
+                    vuforiaButton10DownStartTime = System.currentTimeMillis()
+
+                    // Cambio de color a gris al ser presionado
+                    vuforiaButton10.setBackgroundColor(Color.GRAY)
+                    incremRotZ(10.0f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    vuforiaButton10Pressed = false
+                    // Cambia color a dejar de estar presioando
+                    vuforiaButton10.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
 
 
         /*vuforiaButton6.setOnTouchListener { _, event ->
@@ -858,6 +902,16 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                     }
                 }
 
+                if (vuforiaButton10Pressed) {
+                    val currentTime = System.currentTimeMillis()
+
+                    // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
+                    if (currentTime - vuforiaButton10DownStartTime >= 500) {
+                        // Comienza el incremento cada medio segundo
+                        incremRotZ(10.0f)
+                    }
+                }
+
 
 
 
@@ -936,6 +990,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
         // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
         addContentView(vuforiaButton9, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton10, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
@@ -1150,6 +1210,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             vuforiaButton7.visibility = View.VISIBLE
             vuforiaButton8.visibility = View.VISIBLE
             vuforiaButton9.visibility = View.VISIBLE
+            vuforiaButton10.visibility = View.VISIBLE
             rotacionTextView.visibility = View.VISIBLE
             escalaTextView.visibility = View.VISIBLE
         }
