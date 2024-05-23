@@ -61,6 +61,9 @@ public:
     /// Valor de incremento o decremento en coordenada Z.
     void recibirCoordZ(float valor);
 
+    /// Valor de rotación en coordenada Z.
+    void recibirRotZ(float valor);
+
 private: // methods
     /// Attempt to create a texture from bytes
     /// If the value of textureId is not -1 it is assumed that it refers to an existing texture

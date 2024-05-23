@@ -302,6 +302,7 @@ float coordZ = 0.0f;
 
 float rotX = 0.0f;
 float rotY = 0.0f;
+float rotZ = 0.0f;
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -336,6 +337,13 @@ JNIEXPORT void JNICALL
 enviarValorRotY(jfloat valor)
 {
     gWrapperData.renderer.recibirRotY(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorRotZ(jfloat valor)
+{
+    gWrapperData.renderer.recibirRotZ(valor);
 }
 
 extern "C"
@@ -403,11 +411,47 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremRotX(JNIEnv* /* env
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremRotX(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    rotX-=valor;
+    enviarValorRotX(rotX);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremRotY(JNIEnv* /* env */, jobject /* this */,
                                                                     jfloat valor)
 {
     rotY+=valor;
     enviarValorRotY(rotY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremRotY(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    rotY-=valor;
+    enviarValorRotY(rotY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremRotZ(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    rotZ+=valor;
+    enviarValorRotZ(rotZ);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremRotZ(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    rotZ-=valor;
+    enviarValorRotZ(rotZ);
 }
 
 
