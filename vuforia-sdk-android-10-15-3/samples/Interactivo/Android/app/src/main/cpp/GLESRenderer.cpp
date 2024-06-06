@@ -541,12 +541,11 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureId);
 
-    //------------------------------------//
     VuVector3F vectTrasformacion{coord_X-0.1f ,coord_Y,coord_Z};
     VuMatrix44F matTraslacion = vuMatrix44FTranslationMatrix(vectTrasformacion);
 
-    /*VuVector3F vectRotacion{1,0,0};
-    VuMatrix44F matRotacion = vuMatrix44FRotationMatrix(rot_x,vectRotacion);*/
+    //------------------------------------//
+   /* VuMatrix44F matRotacion = vuIdentityMatrix44F(); // Matriz identidad para inicialización
 
     VuVector3F vectRotacionX{1,0,0};
     VuMatrix44F matRotacionX = vuMatrix44FRotationMatrix(rot_x,vectRotacionX);
@@ -557,16 +556,54 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     VuVector3F vectRotacionZ{0,0,1};
     VuMatrix44F matRotacionZ = vuMatrix44FRotationMatrix(rot_z,vectRotacionZ);
 
-//    VuMatrix44F matRotacion = vuMatrix44FMultiplyMatrix(matRotacionX,matRotacionY);
     VuMatrix44F matRotacionXY = vuMatrix44FMultiplyMatrix(matRotacionX,matRotacionY);
 
     VuMatrix44F matRotacionXYZ = vuMatrix44FMultiplyMatrix(matRotacionXY,matRotacionZ);
 
-//    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion,matRotacion);
     VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion,matRotacionXYZ);
 
     VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
+
+    VuMatrix44F matRotacion = vuIdentityMatrix44F(); // Matriz identidad para inicialización*/
+
+    /*VuVector3F vectRotacionX{1, 0, 0};
+    VuVector3F vectRotacionY{0, 1, 0};
+    VuVector3F vectRotacionZ{0, 0, 1};
+
+// Rotaciones alrededor de cada eje utilizando la matriz identidad como base
+    VuMatrix44F matRotacionX = vuMatrix44FRotate(rot_x, vectRotacionX, matRotacion);
+    VuMatrix44F matRotacionY = vuMatrix44FRotate(rot_y, vectRotacionY, matRotacion);
+    VuMatrix44F matRotacionZ = vuMatrix44FRotate(rot_z, vectRotacionZ, matRotacion);
+
+// Combinación de las rotaciones en el orden deseado (por ejemplo, Z, Y, X)
+    VuMatrix44F matXYZ = vuMatrix44FMultiplyMatrix(
+            vuMatrix44FMultiplyMatrix(matRotacionZ, matRotacionY), matRotacionX);
+
+// Aplicar la traslación y combinar con la matriz de rotación resultante
+    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion, matXYZ);
+
+// Multiplicar con la matriz de proyección de vista de modelo
+    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
+*/
+    VuMatrix44F matRotacion = vuIdentityMatrix44F(); // Matriz identidad para inicialización
+
+    VuVector3F vectRotacionX{1, 0, 0};
+    VuVector3F vectRotacionY{0, 1, 0};
+    VuVector3F vectRotacionZ{0, 0, 1};
+
+    // Rotaciones alrededor de cada eje utilizando la matriz identidad como base
+    matRotacion = vuMatrix44FRotate(rot_z, vectRotacionZ, matRotacion);
+    matRotacion = vuMatrix44FRotate(rot_y, vectRotacionY, matRotacion);
+    matRotacion = vuMatrix44FRotate(rot_x, vectRotacionX, matRotacion);
+
+    // Aplicar la traslación y combinar con la matriz de rotación resultante
+    VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion, matRotacion);
+
+    // Multiplicar con la matriz de proyección de vista de modelo
+    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
+
     //____________________________________//
+
 
     glUniformMatrix4fv(mTextureUniformColorMvpMatrixHandle, 1, GL_FALSE, (GLfloat*)matFinal.data);
     glUniform4f(mTextureUniformColorColorHandle, 1.0f, 1.0f, 1.0f, 1.0f);
@@ -589,8 +626,11 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_DEPTH_TEST);
 
 //    LOG("Valor %f", coord);
-    LOG("Valor R %f", rot_y);
+    LOG("Rotacion x:%f y:%f z:%f",rot_x, rot_y, rot_z);
 }
+
+
+
 
 // Objeto 2
 void

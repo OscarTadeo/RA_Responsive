@@ -188,6 +188,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     var vuforiaButton10Pressed = false  // Estado para saber si el estado del botón
     var vuforiaButton10DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
 
+    // rot Z -
+    private lateinit var vuforiaButton11: Button
+    var vuforiaButton11Pressed = false  // Estado para saber si el estado del botón
+    var vuforiaButton11DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
+
     // Activity methods
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -397,7 +402,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
         vuforiaButton10 = Button(this)
         vuforiaButton10.text = "Z +"
-        vuforiaButton10.setTextColor(Color.GREEN)
+        vuforiaButton10.setTextColor(Color.BLUE)
         vuforiaButton10.setBackgroundColor(Color.WHITE)
 
         // Redondeo de esquinas del botón
@@ -407,6 +412,19 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
         vuforiaButton10.clipToOutline = true
+
+        vuforiaButton11 = Button(this)
+        vuforiaButton11.text = "Z -"
+        vuforiaButton11.setTextColor(Color.BLUE)
+        vuforiaButton11.setBackgroundColor(Color.WHITE)
+
+        // Redondeo de esquinas del botón
+        vuforiaButton11.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton11.clipToOutline = true
 
         // Inicializar el texto para la Escala
         escalaTextView = TextView(this)
@@ -437,6 +455,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton8.visibility = View.GONE
         vuforiaButton9.visibility = View.GONE
         vuforiaButton10.visibility = View.GONE
+        vuforiaButton11.visibility = View.GONE
 
         escalaTextView.visibility = View.GONE
 
@@ -493,6 +512,9 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
                 vuforiaButton10.setX(rotacionTextView.x)
                 vuforiaButton10.setY(vuforiaButton9.y + 185.0f)
+
+                vuforiaButton11.setX(rotacionTextView.x)
+                vuforiaButton11.setY(vuforiaButton10.y + 150.0f)
 
                 // Coordenadas para posicionar el texto "ESCALA" en la inferior
 
@@ -779,6 +801,28 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
+        vuforiaButton11.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    vuforiaButton11Pressed = true
+                    // Empieza a contar la cuenta de los segundos
+                    vuforiaButton11DownStartTime = System.currentTimeMillis()
+
+                    // Cambio de color a gris al ser presionado
+                    vuforiaButton11.setBackgroundColor(Color.GRAY)
+                    decremRotZ(10.0f)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    vuforiaButton11Pressed = false
+                    // Cambia color a dejar de estar presioando
+                    vuforiaButton11.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
 
 
         /*vuforiaButton6.setOnTouchListener { _, event ->
@@ -912,6 +956,16 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                     }
                 }
 
+                if (vuforiaButton11Pressed) {
+                    val currentTime = System.currentTimeMillis()
+
+                    // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
+                    if (currentTime - vuforiaButton11DownStartTime >= 500) {
+                        // Comienza el incremento cada medio segundo
+                        decremRotZ(10.0f)
+                    }
+                }
+
 
 
 
@@ -996,6 +1050,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
         // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
         addContentView(vuforiaButton10, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton11, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))
@@ -1211,6 +1271,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             vuforiaButton8.visibility = View.VISIBLE
             vuforiaButton9.visibility = View.VISIBLE
             vuforiaButton10.visibility = View.VISIBLE
+            vuforiaButton11.visibility = View.VISIBLE
             rotacionTextView.visibility = View.VISIBLE
             escalaTextView.visibility = View.VISIBLE
         }
