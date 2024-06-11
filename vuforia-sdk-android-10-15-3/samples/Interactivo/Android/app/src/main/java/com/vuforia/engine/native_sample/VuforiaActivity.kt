@@ -105,7 +105,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun configureRendering(width: Int, height: Int, orientation: Int, rotation: Int) : Boolean
     private external fun renderFrame() : Boolean
 
-    // Se envia el aumento dela variable X a la clase VuforiaWrapper.cpp
+    // Se envia el aumento de la variable X a la clase VuforiaWrapper.cpp
     private external fun incremCoordX(valor: Float)
     private external fun decremCoordX(valor: Float)
 
@@ -124,6 +124,14 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private external fun incremRotZ(valor: Float)
     private external fun decremRotZ(valor: Float)
 
+    private external fun incremEscX(valor: Float)
+    private external fun decremEscX(valor: Float)
+
+    private external fun incremEscY(valor: Float)
+    private external fun decremEscY(valor: Float)
+
+    private external fun incremEscZ(valor: Float)
+    private external fun decremEscZ(valor: Float)
 
 
     // Declarar el texto.
@@ -192,6 +200,11 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
     private lateinit var vuforiaButton11: Button
     var vuforiaButton11Pressed = false  // Estado para saber si el estado del botón
     var vuforiaButton11DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
+
+    // esc X +
+    private lateinit var vuforiaButton12: Button
+    var vuforiaButton12Pressed = false  // Estado para saber si el estado del botón
+    var vuforiaButton12DownStartTime = 0L  // Tiempo en que se presionó el botón por primera vez
 
     // Activity methods
     @SuppressLint("ClickableViewAccessibility")
@@ -440,6 +453,22 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         }
         escalaTextView.clipToOutline = true
 
+        vuforiaButton12 = Button(this)
+        vuforiaButton12.text = "X +"
+        vuforiaButton12.setTextColor(Color.RED)
+        vuforiaButton12.setBackgroundColor(Color.argb(255,255,255,255))
+
+//        vuforiaButton12.setBackgroundColor(Color.WHITE)
+//        vuforiaButton12.setBackgroundColor(Color.alpha(255))
+
+        // Redondeo de esquinas del botón
+        vuforiaButton12.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 20f) // Set corner radius to 10dp
+            }
+        }
+        vuforiaButton12.clipToOutline = true
+
         // Ocultar el boton
 //        traslacionTextView.visibility = View.GONE
         vuforiaButton.visibility = View.GONE
@@ -456,6 +485,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton9.visibility = View.GONE
         vuforiaButton10.visibility = View.GONE
         vuforiaButton11.visibility = View.GONE
+      //  vuforiaButton12.visibility = View.GONE
 
         escalaTextView.visibility = View.GONE
 
@@ -519,7 +549,10 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                 // Coordenadas para posicionar el texto "ESCALA" en la inferior
 
                 escalaTextView.x = parentWidth / 2f - escalaTextView.width / 2f
-                escalaTextView.y = parentHeight.toFloat() - escalaTextView.height
+                escalaTextView.y = (parentHeight.toFloat() - escalaTextView.height)-350.0f
+
+                vuforiaButton12.setX(escalaTextView.x-350.0f);
+                vuforiaButton12.setY(escalaTextView.y+100.0f);
 
 
                 // Posiciona el botón en el centro de la pantalla
@@ -1062,6 +1095,12 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
 
         // Agregar el texto escala
         addContentView(escalaTextView, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
+        // Agregar el botón a la jerarquía de vistas sobre GLSurfaceView
+        addContentView(vuforiaButton12, ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ))

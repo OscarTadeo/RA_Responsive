@@ -482,6 +482,10 @@ float rot_x = 0.0f;
 float rot_y = 0.0f;
 float rot_z = 0.0f;
 
+float esc_x = 1.0f;
+float esc_y = 1.0f;
+float esc_z = 1.0f;
+
 void
 GLESRenderer::recibirCoordX(float valor)
 {
@@ -516,6 +520,24 @@ void
 GLESRenderer::recibirRotZ(float valor) {
     rot_z = valor;
 }
+
+
+void
+GLESRenderer::recibirEscX(float valor) {
+    esc_x = valor;
+}
+
+void
+GLESRenderer::recibirEscY(float valor) {
+    esc_y = valor;
+}
+
+void
+GLESRenderer::recibirEscZ(float valor) {
+    esc_z = valor;
+}
+
+
 
 
 void
@@ -587,20 +609,32 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
 */
     VuMatrix44F matRotacion = vuIdentityMatrix44F(); // Matriz identidad para inicialización
 
-    VuVector3F vectRotacionX{1, 0, 0};
-    VuVector3F vectRotacionY{0, 1, 0};
-    VuVector3F vectRotacionZ{0, 0, 1};
+    VuVector3F vectX{1, 0, 0};
+    VuVector3F vectY{0, 1, 0};
+    VuVector3F vectZ{0, 0, 1};
 
     // Rotaciones alrededor de cada eje utilizando la matriz identidad como base
-    matRotacion = vuMatrix44FRotate(rot_z, vectRotacionZ, matRotacion);
-    matRotacion = vuMatrix44FRotate(rot_y, vectRotacionY, matRotacion);
-    matRotacion = vuMatrix44FRotate(rot_x, vectRotacionX, matRotacion);
+    matRotacion = vuMatrix44FRotate(rot_z, vectZ, matRotacion);
+    matRotacion = vuMatrix44FRotate(rot_y, vectY, matRotacion);
+    matRotacion = vuMatrix44FRotate(rot_x, vectX, matRotacion);
 
     // Aplicar la traslación y combinar con la matriz de rotación resultante
     VuMatrix44F Tras_X_Rot = vuMatrix44FMultiplyMatrix(matTraslacion, matRotacion);
 
+    // Escala
+    // Creación de la matriz de escalado
+    VuMatrix44F matEscala = vuIdentityMatrix44F();
+    matEscala.data[0] = esc_x; // Escala en el eje X
+    matEscala.data[5] = esc_y; // Escala en el eje Y
+    matEscala.data[10] = esc_z; // Escala en el eje Z
+
+    // Combinar escalado, traslación y rotación
+    VuMatrix44F Rot_Escala = vuMatrix44FMultiplyMatrix(matRotacion, matEscala );
+    VuMatrix44F Tras_Rot_Escala = vuMatrix44FMultiplyMatrix(matTraslacion, Rot_Escala);
+
     // Multiplicar con la matriz de proyección de vista de modelo
-    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_X_Rot);
+    VuMatrix44F matFinal = vuMatrix44FMultiplyMatrix(modelViewProjectionMatrix, Tras_Rot_Escala);
+
 
     //____________________________________//
 

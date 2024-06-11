@@ -304,6 +304,10 @@ float rotX = 0.0f;
 float rotY = 0.0f;
 float rotZ = 0.0f;
 
+float escX = 1.0f;
+float escY = 1.0f;
+float escZ = 1.0f;
+
 extern "C"
 JNIEXPORT void JNICALL
 enviarValorX(jfloat valor)
@@ -344,6 +348,27 @@ JNIEXPORT void JNICALL
 enviarValorRotZ(jfloat valor)
 {
     gWrapperData.renderer.recibirRotZ(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorEscX(jfloat valor)
+{
+    gWrapperData.renderer.recibirEscX(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorEscY(jfloat valor)
+{
+    gWrapperData.renderer.recibirEscY(valor);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+enviarValorEscZ(jfloat valor)
+{
+    gWrapperData.renderer.recibirEscZ(valor);
 }
 
 extern "C"
@@ -452,6 +477,60 @@ Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremRotZ(JNIEnv* /* env
 {
     rotZ-=valor;
     enviarValorRotZ(rotZ);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremEscX(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escX+=valor;
+    enviarValorEscX(escX);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremEscX(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escX-=valor;
+    enviarValorEscX(escX);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremEscY(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escY+=valor;
+    enviarValorEscY(escY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremEscY(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escY-=valor;
+    enviarValorEscY(escY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_incremEscZ(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escZ+=valor;
+    enviarValorEscZ(escZ);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_vuforia_engine_native_1sample_VuforiaActivity_decremEscZ(JNIEnv* /* env */, jobject /* this */,
+                                                                    jfloat valor)
+{
+    escZ-=valor;
+    enviarValorEscZ(escZ);
 }
 
 
