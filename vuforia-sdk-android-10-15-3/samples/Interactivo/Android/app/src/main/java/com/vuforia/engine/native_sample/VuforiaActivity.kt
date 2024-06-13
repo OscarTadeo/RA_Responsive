@@ -485,7 +485,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
         vuforiaButton9.visibility = View.GONE
         vuforiaButton10.visibility = View.GONE
         vuforiaButton11.visibility = View.GONE
-      //  vuforiaButton12.visibility = View.GONE
+        vuforiaButton12.visibility = View.GONE
 
         escalaTextView.visibility = View.GONE
 
@@ -856,6 +856,28 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             }
         }
 
+        vuforiaButton12.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    vuforiaButton12Pressed = true
+                    // Empieza a contar la cuenta de los segundos
+                    vuforiaButton12DownStartTime = System.currentTimeMillis()
+
+                    // Cambio de color a gris al ser presionado
+                    vuforiaButton12.setBackgroundColor(Color.GRAY)
+                    incremEscX(0.1f);
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    vuforiaButton12Pressed = false
+                    // Cambia color a dejar de estar presioando
+                    vuforiaButton12.setBackgroundColor(Color.WHITE)
+                    true
+                }
+                else -> false
+            }
+        }
+
 
 
         /*vuforiaButton6.setOnTouchListener { _, event ->
@@ -996,6 +1018,16 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
                     if (currentTime - vuforiaButton11DownStartTime >= 500) {
                         // Comienza el incremento cada medio segundo
                         decremRotZ(10.0f)
+                    }
+                }
+
+                if (vuforiaButton12Pressed) {
+                    val currentTime = System.currentTimeMillis()
+
+                    // Se comprueba si han pasado 2 segundos desde que se presionó el botón por primera vez
+                    if (currentTime - vuforiaButton12DownStartTime >= 500) {
+                        // Comienza el incremento cada medio segundo
+                        incremEscX(0.1f)
                     }
                 }
 
@@ -1311,6 +1343,7 @@ class VuforiaActivity : AppCompatActivity(), GLSurfaceView.Renderer, SurfaceHold
             vuforiaButton9.visibility = View.VISIBLE
             vuforiaButton10.visibility = View.VISIBLE
             vuforiaButton11.visibility = View.VISIBLE
+            vuforiaButton12.visibility = View.VISIBLE
             rotacionTextView.visibility = View.VISIBLE
             escalaTextView.visibility = View.VISIBLE
         }

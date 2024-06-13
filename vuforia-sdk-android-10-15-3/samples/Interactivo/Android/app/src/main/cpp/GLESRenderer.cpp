@@ -660,7 +660,8 @@ GLESRenderer::renderModel(VuMatrix44F modelViewProjectionMatrix, const int numVe
     glDisable(GL_DEPTH_TEST);
 
 //    LOG("Valor %f", coord);
-    LOG("Rotacion x:%f y:%f z:%f",rot_x, rot_y, rot_z);
+//    LOG("Rotacion x:%f y:%f z:%f",rot_x, rot_y, rot_z);
+    LOG("Escala x:%f ",esc_x);
 }
 
 
